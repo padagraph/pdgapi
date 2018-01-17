@@ -234,21 +234,21 @@ def layout_api(engines, api=None, optionables=None, prefix="layout"):
     #from cello.layout.simple import DrlLayout
 
     LAYOUTS = [
-        # 3D
+
+        ("3D_Force_directed" , FruchtermanReingoldLayout(dim=3, weighted=True) ),
+        ("2D_Force_directed" , FruchtermanReingoldLayout(dim=2, weighted=True) ),
         ("3DKamadaKawai" , KamadaKawaiLayout(dim=3) ),
         ("3DMds"         , ProxLayoutMDS(dim=3) | Shaker(kelastic=.9) ),
-        ("3DPca"         , ProxLayoutPCA(dim=3, ) | Shaker(kelastic=.9) ),
+        #("3DPca"         , ProxLayoutPCA(dim=3, ) | Shaker(kelastic=.9) ),
         ("3DPcaWeighted" , ProxLayoutPCA(dim=3, weighted=True) | Shaker(kelastic=.9) ),
-        ("3DRandomProj"  , ProxLayoutRandomProj(dim=3) ),
+        #("3DRandomProj"  , ProxLayoutRandomProj(dim=3) ),
         ("3DOrdered"     , ProxMDSSugiyamaLayout(dim=3) | Shaker(kelastic=0.9) ),
         # 2D
-        ("2DPca"         , ProxLayoutPCA(dim=2) | Shaker(kelastic=1.8) ),
-        ("2DMds"         , ProxLayoutMDS(dim=2 ) | Shaker(kelastic=.9) ),
-        ("2DKamadaKawai" , KamadaKawaiLayout(dim=2) ),
+        #("2DPca"         , ProxLayoutPCA(dim=2) | Shaker(kelastic=1.8) ),
+        #("2DMds"         , ProxLayoutMDS(dim=2 ) | Shaker(kelastic=.9) ),
+        #("2DKamadaKawai" , KamadaKawaiLayout(dim=2) ),
         # tree
         #("DrlLayout" , DrlLayout(dim=2) ),
-        ("2DFruchtermanReingoldLayoutWeighted" , FruchtermanReingoldLayout(dim=2, weighted=True) ),
-        ("3DFruchtermanReingoldLayoutWeighted" , FruchtermanReingoldLayout(dim=3, weighted=True) ),
     ]
 
     

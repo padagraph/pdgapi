@@ -168,6 +168,26 @@ def graphedit_api(name, app, graphdb, login_manager, socketio):
         return jsonify(data)
 
 
+    """ Completion by uuid"""
+    @api.route("/g/<string:gid>/complete/uuid/<string:uuid>", methods=['GET'])
+    @api.route("/g/<string:gid>/complete/uuid", methods=['POST'])
+    def complete_uuid(gid, uuid=None):
+
+        if request.method == 'POST':
+            uuid = request.json.get('uuid', uuid)
+
+        node = _get_node(gid, uuid)
+        data = {
+                "graph" : gid,
+                "uuid"  : uuid,
+                "obj_type"  : "node",
+                "complete": node,
+                "count": len(node),
+           }
+
+        return jsonify(data)
+
+
     """ Schema """
 
     @api.route("/g/<string:gid>/schema", methods=['GET','POST'])
@@ -476,19 +496,24 @@ def graphedit_api(name, app, graphdb, login_manager, socketio):
         
         if request.method =='GET':
             start = int(request.args.get('start', 0))
+            mode = request.args.get('mode', 'ALL')
+            
         elif  request.method =='POST':
             start = request.json.get('start', 0)
+            mode = request.json.get('mode', 'ALL')
 
-        neighbors = graphdb.get_graph_neighbors(gid, uuid, filter_edges=None, filter_nodes=None, filter_properties=None, mode='ALL', start=start, size=SIZE )
+        
+        neighbors = graphdb.get_graph_neighbors(gid, uuid, filter_edges=None, filter_nodes=None, filter_properties=None, mode= mode, start=start, size=SIZE )
 
         data = {
                 'graph' : gid,
                 'node'  : uuid,
                 'start' : start,
+                'mode': mode,
                 'neighbors' : neighbors,
                 'size' : SIZE,
                 'length' : len(neighbors),
-                'count' : graphdb.count_neighbors(gid, uuid, filter_edges=None, filter_nodes=None, filter_properties=None, mode='ALL' )
+                'count' : graphdb.count_neighbors(gid, uuid, filter_edges=None, filter_nodes=None, filter_properties=None, mode=mode )
             }
         return jsonify( data )
 
