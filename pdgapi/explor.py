@@ -25,8 +25,8 @@ def igraph2dict(graph, exclude_gattrs=[], exclude_vattrs=[], exclude_eattrs=[], 
     
     # some check
     assert isinstance(graph, igraph.Graph)
-    if 'id' in graph.vs.attributes():
-        raise ValueError("The graph already have a vertex attribute 'id'")
+    #if 'id' in graph.vs.attributes():
+        #raise Warning("The graph already have a vertex attribute 'id'")
 
     # create the graph dict
     attrs = { k : graph[k] for k in graph.attributes()}
@@ -80,7 +80,8 @@ def prepare_graph(graph):
 
     #if 'doc' in graph.vs.attribute_names():
         #del graph.vs['doc']
-
+    if not 'meta' in graph.attributes():
+        graph['meta'] = {}
     if 'nodetype' not in graph.vs.attribute_names():
         graph.vs['nodetype'] = [ "T" for e in graph.vs ]
     if 'uuid' not in graph.vs.attribute_names():
@@ -231,24 +232,28 @@ def layout_api(engines, api=None, optionables=None, prefix="layout"):
     from cello.layout.proxlayout import ProxLayoutPCA, ProxLayoutRandomProj, ProxLayoutMDS, ProxMDSSugiyamaLayout
     from cello.layout.transform import Shaker
     from cello.layout.transform import ByConnectedComponent
-    #from cello.layout.simple import DrlLayout
+    from cello.layout.simple import DrlLayout
 
     LAYOUTS = [
 
-        ("3D_Force_directed" , FruchtermanReingoldLayout(dim=3, weighted=True) ),
         ("2D_Force_directed" , FruchtermanReingoldLayout(dim=2, weighted=True) ),
-        ("3DKamadaKawai" , KamadaKawaiLayout(dim=3) ),
+        ("3D_Force_directed" , FruchtermanReingoldLayout(dim=3, weighted=True) ),
+
+        ("2D_KamadaKawai" , KamadaKawaiLayout(dim=2) ),
+        ("3D_KamadaKawai" , KamadaKawaiLayout(dim=3) ),
+        
         ("3DMds"         , ProxLayoutMDS(dim=3) | Shaker(kelastic=.9) ),
-        #("3DPca"         , ProxLayoutPCA(dim=3, ) | Shaker(kelastic=.9) ),
+        ("2DMds"         , ProxLayoutMDS(dim=2 ) | Shaker(kelastic=.9) ),
+        
+        ("3DPca"         , ProxLayoutPCA(dim=3, ) | Shaker(kelastic=.9) ),
         ("3DPcaWeighted" , ProxLayoutPCA(dim=3, weighted=True) | Shaker(kelastic=.9) ),
+        ("2DRandomProj"  , ProxLayoutRandomProj(dim=2) ),
         #("3DRandomProj"  , ProxLayoutRandomProj(dim=3) ),
         ("3DOrdered"     , ProxMDSSugiyamaLayout(dim=3) | Shaker(kelastic=0.9) ),
         # 2D
-        #("2DPca"         , ProxLayoutPCA(dim=2) | Shaker(kelastic=1.8) ),
-        #("2DMds"         , ProxLayoutMDS(dim=2 ) | Shaker(kelastic=.9) ),
-        #("2DKamadaKawai" , KamadaKawaiLayout(dim=2) ),
+        ("2DPca"         , ProxLayoutPCA(dim=2) | Shaker(kelastic=1.8) ),
         # tree
-        #("DrlLayout" , DrlLayout(dim=2) ),
+        ("DrlLayout" , DrlLayout(dim=2) | Shaker(kelastic=0.8) ),
     ]
 
     
