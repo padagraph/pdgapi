@@ -10,7 +10,6 @@ from pdglib.graphdb_interface import GraphError, ApiError
 
 
 
-
 def graphedit_api(name, app, graphdb, login_manager, socketio):
     """ graph  api """
     api = ReliureAPI(name,expose_route = False)
@@ -21,6 +20,7 @@ def graphedit_api(name, app, graphdb, login_manager, socketio):
             "name" : name,
             "db" : repr(graphdb)
         }
+    print infos
 
 
     def make_pad_url(name):
@@ -85,9 +85,8 @@ def graphedit_api(name, app, graphdb, login_manager, socketio):
     @api.route("/g/<string:gid>", methods=['GET'])
     def get_graph_metadata(gid):
         """ get  graph metadata  """
-
+        
         data = { gid: graphdb.get_graph_metadata(gid) }
-
         return jsonify(data)
 
     #@api.route("/g/<string:gid>/drop", methods=['GET'])
@@ -135,7 +134,7 @@ def graphedit_api(name, app, graphdb, login_manager, socketio):
 
         data = {    "graph" : gid,
                     "subgraph": subgraph,
-                }
+               }
         return jsonify(data)
 
 

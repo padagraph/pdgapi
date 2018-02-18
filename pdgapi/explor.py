@@ -78,10 +78,8 @@ def igraph2dict(graph, exclude_gattrs=[], exclude_vattrs=[], exclude_eattrs=[], 
 
 def prepare_graph(graph):
 
-    #if 'doc' in graph.vs.attribute_names():
-        #del graph.vs['doc']
     if not 'meta' in graph.attributes():
-        graph['meta'] = {}
+        graph['meta'] = { 'edge_count':0,'node_count':0, }
     if 'nodetype' not in graph.vs.attribute_names():
         graph.vs['nodetype'] = [ "T" for e in graph.vs ]
     if 'uuid' not in graph.vs.attribute_names():
@@ -98,8 +96,7 @@ def prepare_graph(graph):
                 p['label']  = v.index
                 
         graph.vs['properties'] = props
-            
-
+           
     if 'edgetype' not in graph.es.attribute_names():
         graph.es['edgetype'] = [ "T" for e in graph.es ]
     if 'uuid' not in graph.es.attribute_names():
