@@ -193,6 +193,8 @@ class AdditiveNodes(GenericType):
 
         return data
 
+
+
 # Layouts
 def layout_api(engines, api=None, optionables=None, prefix="layout"):
         
@@ -273,10 +275,10 @@ def clustering_api(engines, api=None, optionables=None, prefix="clustering"):
         """ Return a default engine over a lexical graph
         """
         # setup
-        engine = Engine("gbuilder", "clustering")
+        engine = Engine("gbuilder", "clustering", "labelling")
         engine.gbuilder.setup(in_name="request", out_name="graph", hidden=True)
         engine.clustering.setup(in_name="graph", out_name="clusters")
-        #engine.labelling.setup(in_name="clusters", out_name="clusters", hidden=True)
+        engine.labelling.setup(in_name="clusters", out_name="clusters", hidden=True)
 
         engine.gbuilder.set(engines.edge_subgraph) 
         engine.clustering.set(*optionables)
@@ -286,10 +288,11 @@ def clustering_api(engines, api=None, optionables=None, prefix="clustering"):
         from cello.clustering.labelling.basic import VertexAsLabel, TypeFalseLabel, normalize_score_max
 
         def _labelling(graph, cluster, vtx):
+            print vtx.attributes()
             return  Label(vtx["uuid"], score=1, role="default")
         
-        #labelling = VertexAsLabel( _labelling ) | normalize_score_max
-        #engine.labelling.set(labelling)
+        labelling = VertexAsLabel( _labelling ) | normalize_score_max
+        engine.labelling.set(labelling)
 
         return engine
         
@@ -352,10 +355,6 @@ def explore_api(name, graphdb, engines):
     view.add_output("graph", export_graph, id_attribute='uuid'  )
 
     api.register_view(view, url_prefix="additive_nodes")
-
-    
-    api = layout_api(engines, api)
-    api = clustering_api(engines, api)
 
     import random
     import json
