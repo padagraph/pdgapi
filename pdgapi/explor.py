@@ -165,6 +165,7 @@ class EdgeList(GenericType):
 class NodeExpandQuery(GenericType):
     def parse(self, data):
         gid = data.get('graph', None)
+        expand = data.get('expand', None)
         nodes_uuid = data.get('nodes', None)
         weights = data.get('weights', [])
 
@@ -288,7 +289,6 @@ def clustering_api(engines, api=None, optionables=None, prefix="clustering"):
         from cello.clustering.labelling.basic import VertexAsLabel, TypeFalseLabel, normalize_score_max
 
         def _labelling(graph, cluster, vtx):
-            print vtx.attributes()
             return  Label(vtx["uuid"], score=1, role="default")
         
         labelling = VertexAsLabel( _labelling ) | normalize_score_max
@@ -323,7 +323,7 @@ def clustering_api(engines, api=None, optionables=None, prefix="clustering"):
 def explore_api(name, graphdb, engines):
     """ API over tmuse elastic search
     """
-    api = ReliureAPI(name,expose_route=False)
+    api = ReliureAPI(name,expose_route=True)
 
     # starred 
     view = EngineView(engines.starred_engine(graphdb))
