@@ -75,7 +75,8 @@ def igraph2dict(graph, exclude_gattrs=[], exclude_vattrs=[], exclude_eattrs=[], 
         d['es'].append(edge)
 
     return d
-
+    
+@Composable
 def prepare_graph(graph):
 
     if not 'meta' in graph.attributes():
@@ -119,7 +120,7 @@ def prepare_graph(graph):
 
     return graph
 
-
+@Composable
 def export_graph(graph, exclude_gattrs=[], exclude_vattrs=[], exclude_eattrs=[], id_attribute=None):
     return  igraph2dict(graph, exclude_gattrs, exclude_vattrs, exclude_eattrs, id_attribute)    
 
@@ -166,15 +167,15 @@ class NodeExpandQuery(GenericType):
     def parse(self, data):
         gid = data.get('graph', None)
         expand = data.get('expand', None)
-        nodes_uuid = data.get('nodes', None)
+        nodes_uuid = data.get('nodes', [])
         weights = data.get('weights', [])
 
         if gid is None :
             raise ValueError('graph should not be null')
-        if nodes_uuid is None :
-            raise ValueError('nodes should not be null')
+        if expand is None :
+            raise ValueError('`expand` should not be null')
 
-        if len(weights) and len(weights) != len(nodes_uuid):
+        if len(weights) and len(weights) != len(expand):
             raise ValueError("weights and nodes should have same length. %s/%s" % (len(weights), len(nodes_uuid)))
 
         return data
