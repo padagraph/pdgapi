@@ -26,11 +26,10 @@ def get_engines_routes(app, host):
     allowed = [ '/xplor/']
     
     def _match(path) :
-        path = r['path']
         return any( [ e in path for e in allowed ] ) \
            and not any( ( path.endswith("/play"), path.endswith("/options"), )  )
            
-    routes = [ r for r in routes if _match(r) ]
+    routes = [ r for r in routes if _match(r['path']) ]
     key = lambda e : e['path'][e['path'].rindex('/')+1:]
     routes = { key(v) : v  for v in routes }
     return routes

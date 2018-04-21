@@ -20,7 +20,7 @@ def graphedit_api(name, app, graphdb, login_manager, socketio):
             "name" : name,
             "db" : repr(graphdb)
         }
-    print infos
+    print( infos )
 
 
     def make_pad_url(name):
@@ -87,6 +87,12 @@ def graphedit_api(name, app, graphdb, login_manager, socketio):
         """ get  graph metadata  """
         
         data = { gid: graphdb.get_graph_metadata(gid) }
+        if request.args.get('edgetypes', "") == "false" :
+            data[gid].pop("edgetypes")
+        
+        if request.args.get('nodetypes', "") == "false" :
+            data[gid].pop("nodetypes")
+        
         return jsonify(data)
 
     #@api.route("/g/<string:gid>/drop", methods=['GET'])
